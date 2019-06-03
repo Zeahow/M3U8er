@@ -6,13 +6,4 @@
     <item
         android:id="@+id/action_pause_all"
         android:title="@string/action_pause_all" />
-    <item
-        android:id="@+id/action_start_selected"
-        android:title="@string/action_start_selected" />
-    <item
-        android:id="@+id/action_pause_selected"
-        android:title="@string/action_pause_selected" />
-    <item
-        android:id="@+id/action_deleted_selected"
-        android:title="@string/action_delete_selected" />
 </menu>

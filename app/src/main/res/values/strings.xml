@@ -9,9 +9,6 @@
 
     <string name="action_start_all">开始全部任务</string>
     <string name="action_pause_all">暂停全部任务</string>
-    <string name="action_start_selected">开始选中任务</string>
-    <string name="action_pause_selected">暂停选中任务</string>
-    <string name="action_delete_selected">删除选中任务</string>
 
     <string name="menu_all_task">所有任务</string>
     <string name="menu_downloading_task">下载中</string>
@@ -29,5 +26,15 @@
     <string name="start">开始</string>
     <string name="empty_view_tip">空空如也</string>
     <string name="click_me_to_show_tutorial"><u>不会下载？点我查看教程</u></string>
+
+    <string name="default_path">/storage/emulated/0/JKVD</string>
+    <string name="save_path">保存路径</string>
+    <string name="name">名称</string>
+    <string name="url">链接</string>
+    <string name="click_me_to_get_name">-! 点我获取名称 !-</string>
+    <string name="getting_name">正在获取名称…</string>
+    <string name="unable_to_get_name">无法获取名称</string>
+    <string name="error_http_input">请输入以http(s)开头的链接</string>
+    <string name="video_name_not_specified">未指定视频名称，默认设置为\n</string>
 
 </resources>

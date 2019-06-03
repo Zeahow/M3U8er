@@ -1,32 +1,34 @@
 package com.zeahow.m3u8er;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.MenuItem;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.zeahow.m3u8er.dialog.NewTaskDialog;
 import com.zeahow.m3u8er.recyclerview.TaskAdapter;
-import com.zeahow.m3u8er.recyclerview.TaskItem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "M3U8er";
 
     private TaskAdapter taskAdapter;
 
@@ -37,13 +39,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> newTask(null));
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,7 +49,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initTaskList();
+        onNewIntent(getIntent());
     }
+
     /**
      * 初始化任务列表
      */
@@ -64,10 +62,66 @@ public class MainActivity extends AppCompatActivity
         // 为recyclerView注册ContextMenu
         registerForContextMenu(recyclerView);
         // 设置适配器
-        taskAdapter = new TaskAdapter(new ArrayList<TaskItem>());
+        taskAdapter = new TaskAdapter(new LinkedList<>());
         recyclerView.setAdapter(taskAdapter);
        // 设置分割线
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+    }
+
+    /**
+     * 被新的Intent唤醒
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 判断是否由分享功能调用本Activity
+        if(Intent.ACTION_SEND.equals(intent.getAction())) {
+            String url = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if(!url.contains("http")) return;   // 未包含链接则不处理
+            url = url.substring(url.indexOf("http"));
+            newTask(url);
+        }
+    }
+
+    /**
+     * 新建下载任务
+     * @param url 下载地址
+     */
+    private void newTask(String url) {
+        if(noPermission()) return;
+        new NewTaskDialog(this).show(url);
+    }
+
+
+    /**
+     * 权限检查
+     * @return 是否拥有权限
+     */
+    private boolean noPermission() {
+        // 安卓6以上版本进行权限检查
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            if(checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{permission}, 1);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 权限请求回调函数
+     * @param requestCode 请求码
+     * @param permissions 权限
+     * @param grantResults 结果
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this, "你拒绝了存储权限，无法继续操作", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

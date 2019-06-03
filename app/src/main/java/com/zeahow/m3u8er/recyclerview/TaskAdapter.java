@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.zeahow.m3u8er.R;
+import com.zeahow.m3u8er.download.TaskInfo;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
 
-    private List<TaskItem> taskList;
+    private List<TaskInfo> taskList;
 
     class TaskViewHolder extends RecyclerView.ViewHolder{
         View view;
@@ -40,7 +42,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * 构造函数
      * @param taskList 下载任务列表
      */
-    public TaskAdapter(List<TaskItem> taskList) {
+    public TaskAdapter(List<TaskInfo> taskList) {
         this.taskList = taskList;
     }
 
