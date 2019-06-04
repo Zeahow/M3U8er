@@ -58,7 +58,8 @@ public class TaskInfo {
                 String.valueOf(downloadedTsNum),
                 String.valueOf(curTsDownloadedLength),
                 String.valueOf(needTranscode),
-                String.valueOf(progress)
+                String.valueOf(progress),
+                status.toString()
         };
     }
 }

@@ -1,6 +1,6 @@
 package com.zeahow.m3u8er.parser;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface IM3u8Parser {
 
